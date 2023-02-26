@@ -2,7 +2,8 @@ import random
 import argparse
 import os.path
 import urllib.request
-from cowsay import cowsay, get_random_cow
+from cowsay import cowsay, get_random_cow, read_dot_cow
+from io import StringIO
 
 def bullscows(guess: str, secret: str) -> (int, int):
     bulls = 0
@@ -34,12 +35,24 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
     return attempts
 
 def ask(prompt: str, valid: list[str] = None) -> str:
-    cow = get_random_cow()
-    print(cowsay(prompt, cow=cow))
+    cow = read_dot_cow(StringIO("""
+    $the_cow = <<EOC;
+             $thoughts
+              $thoughts
+                        _██_
+                 *     (´• ̮•)      *
+             *       *  >  <   *       *
+        *        *    ( . • . )    *       *
+             *         >     <         *       *
+    * * * * * * * * *(... • .. )* * * * * * * * * * *
+    * * * * * * * * * * * * * * * * * * * * * * * * *
+    EOC
+    """))
+    print(cowsay(prompt, cowfile=cow))
     word = input()
     if valid:
         while (not word in valid):
-            print(cowsay(prompt, cow=cow))
+            print(cowsay(prompt, cowfile=cow))
             word = input()
     return word
 
